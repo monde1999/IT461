@@ -1,0 +1,5 @@
+@host = http://127.0.0.1:6000
+
+
+GET {{ host }}/v1/cats/ HTTP/1.1
+
