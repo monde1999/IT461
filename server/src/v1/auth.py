@@ -1,4 +1,5 @@
 from flask import jsonify, request, current_app
+from v1.user.model import UserModel
 import jwt
 import datetime
 
@@ -18,7 +19,7 @@ def verify_token(token):
 
 def login(username, password):
     # TODO: use the database to verify the username and password
-    if username == 'admin' and password == 'admin':
+    if UserModel().login(username, password):
         payload = {
             'username': username,
             'id': 100,
