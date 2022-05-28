@@ -1,32 +1,7 @@
-import { useState, useEffect } from "react";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import DogCard from "./DogCard";
 
-const Dogs = () => {
-    const [dogs, setDogs] = useState();
-    const axiosPrivate = useAxiosPrivate();
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    const getDogs = async (url, options) => {
-        try {
-            const response = await axiosPrivate.get(url, options);
-            console.log(response.data);
-            setDogs(response.data);
-        } catch (err) {
-            console.error(err);
-            navigate('/login', { state: { from: location }, replace: true });
-        }
-    }
-    useEffect(() => {
-        const controller = new AbortController();
-        getDogs('/dogs/?limit=3&offset=0', {
-            signal: controller.signal
-        });
-        return () => {
-            controller.abort();
-        }
-    }, []);
+const Dogs = ({dogs, getDogs}) => {
 
     const paginationHandler = (e) => {
         e.preventDefault();
@@ -38,7 +13,7 @@ const Dogs = () => {
     }
     return (
         <article>
-            <h2>Dogs List</h2>
+            <h2>Dogs List (<Link to="/dogs/create">Create</Link>)</h2>
             {dogs?.data?.length
                 ? (
                     <>
@@ -53,15 +28,7 @@ const Dogs = () => {
                         <tbody>
                     {
                         dogs.data.map((dog, i) =>
-                            <tr key={dog.id}>
-                                <td>{dog.id}</td>
-                                <td>{dog.name}</td>
-                                <td>
-                                    <a href=""> View </a> |
-                                    <a href=""> Edit </a> |
-                                    <a href=""> Delete </a>
-                                </td>
-                            </tr>
+                            <DogCard dog={dog} />
                         )
                     }
                         </tbody>
